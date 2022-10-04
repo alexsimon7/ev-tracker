@@ -15,6 +15,8 @@ Other:
 DONE => 1. Begin commits to Git/GitHub for version control
     1a. Purge unused dependencies
 
+Input: Date Object (date of timeline to pull from Google)
+Output: returns undefined, but downloads kml file to user's default chrome download folder
  */
 
 require('dotenv').config();

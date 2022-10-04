@@ -9,10 +9,12 @@
   "author": "Alex Simon",
   "license": "ISC",
   "dependencies": {
+    "@tmcw/togeojson": "^5.2.2",
     "dotenv": "^16.0.3",
     "puppeteer": "^18.0.3",
     "puppeteer-extra": "^3.3.4",
     "puppeteer-extra-plugin-stealth": "^2.11.1",
-    "selenium-webdriver": "^4.4.0"
+    "selenium-webdriver": "^4.4.0",
+    "xmldom": "^0.6.0"
   }
 }

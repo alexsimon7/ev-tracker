@@ -11,10 +11,9 @@
   "dependencies": {
     "@tmcw/togeojson": "^5.2.2",
     "dotenv": "^16.0.3",
+    "node-fetch": "^2.6.7",
     "puppeteer": "^18.0.3",
     "puppeteer-extra": "^3.3.4",
-    "puppeteer-extra-plugin-stealth": "^2.11.1",
-    "selenium-webdriver": "^4.4.0",
-    "xmldom": "^0.6.0"
+    "puppeteer-extra-plugin-stealth": "^2.11.1"
   }
 }

@@ -10,10 +10,18 @@
   "license": "ISC",
   "dependencies": {
     "@tmcw/togeojson": "^5.2.2",
+    "async": "^3.2.4",
     "dotenv": "^16.0.3",
     "node-fetch": "^2.6.7",
     "puppeteer": "^18.0.3",
     "puppeteer-extra": "^3.3.4",
-    "puppeteer-extra-plugin-stealth": "^2.11.1"
+    "puppeteer-extra-plugin-stealth": "^2.11.1",
+    "readline-sync": "^1.4.10",
+    "xmldom": "^0.6.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.25.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0"
   }
 }

@@ -1,11 +1,26 @@
-const timelineGrabber = require('./timelineGrabber/timelineGrabber.js');
-const kmlToJSON = require('./kmlToJSON/kmlToJSON.js');
+const runTimeLineGrabber = require('./timelineGrabber/runTimelineGrabber');
+const async = require('async');
 
-let grabDate = new Date(2022, 8, 24);
+async.series([
+  function(callback) {
+    runTimeLineGrabber();
+    callback();
+  },
+], function(err) {
+  console.log('Downloaded and Converted To JSON');
+});
 
-// timelineGrabber(grabDate);
-let jsonObj = kmlToJSON(grabDate);
 
-console.log(jsonObj);
+
+
+
+
+
+
+
+
+
+
+
 
 

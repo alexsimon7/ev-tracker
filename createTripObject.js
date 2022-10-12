@@ -1,3 +1,6 @@
+//Input: Date Obj (date to collect routes)
+//Output: Trip Object (which includes driving segments, or if none, an empty Trip Object)
+
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
@@ -24,7 +27,7 @@ function convertToHours(seconds) {
 }
 
 
-function createEventObject(date) {
+async function createTripObject(date) {
     let year = date.getFullYear().toString();
     let month = (date.getMonth() + 1).toString().length === 1 ? '0' + (date.getMonth() + 1).toString() : (date.getMonth() + 1).toString();
     let day = date.getDate().toString().length ===1 ? '0' + date.getDate().toString() : date.getDate().toString();
@@ -80,5 +83,5 @@ function createEventObject(date) {
 }
 
 
-module.exports = createEventObject;
+module.exports = createTripObject;
 

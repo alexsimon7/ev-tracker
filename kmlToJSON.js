@@ -10,7 +10,7 @@ Output: returns the parsed JSON and creates a JSON file in the date
 folder **Do we need to create the JSON file?
  */
 
-function kmlToJSON(date) {
+async function kmlToJSON(date) {
   const year = date.getFullYear().toString();
   const month = (date.getMonth() + 1).toString().length === 1 ? `0${(date.getMonth() + 1).toString()}` : (date.getMonth() + 1).toString();
   const day = date.getDate().toString().length === 1 ? `0${date.getDate().toString()}` : date.getDate().toString();
@@ -30,14 +30,14 @@ function kmlToJSON(date) {
   const docPath = path.join(`${os.homedir()}/Downloads`, fileName);
 
   // Copy KML File to Data File
-  fs.copyFileSync(docPath, `/${path.dirname(__dirname)}/data/${fileDate}.kml`);
+  fs.copyFileSync(docPath, `${__dirname}/data/${fileDate}.kml`);
 
   // Convert to JSON
   const kml = new DOMParser().parseFromString(fs.readFileSync(docPath, 'utf8'));
   const converted = tj.kml(kml);
 
   // Save JSON to Data File
-  fs.writeFileSync(`${path.dirname(__dirname)}/data/${fileDate}.json`, JSON.stringify(converted));
+  fs.writeFileSync(`${__dirname}/data/${fileDate}.json`, JSON.stringify(converted));
   return JSON.parse(JSON.stringify(converted));
 }
 

@@ -4,11 +4,13 @@ const timelineGrabber = require('./timelineGrabber/timelineGrabber');
 const kmlToJSON = require('./kmlToJSON');
 const createTripObject = require('./createTripObject');
 const addWeatherToRoutes = require('./addWeatherToRoutes');
+const enterBatteryInfo = require('./enterBatteryInfo');
+const logDay = require('./logDay');
+const saveToJSON = require('./saveToJSON');
 
 function correctFormatOfDate(date) {
   return Date.parse(date);
 }
-
 
 async function enterADay() {
   let newDate = '';
@@ -22,9 +24,9 @@ async function enterADay() {
     newDate = readlineSync.prompt();
   }
 
-  let newDateObject = new Date(newDate);
+  const newDateObject = new Date(newDate);
 
-  //potential functionality to prevent previous dates (search of the database)
+  // potential functionality to prevent previous dates (search of the database)
 
   // await timelineGrabber(newDateObject);
   // console.log('Timeline Grabbed.')
@@ -35,25 +37,30 @@ async function enterADay() {
   let newEventObject = await createTripObject(newDateObject);
   console.log('New Object Created');
 
-  //add weather via API
-
   await addWeatherToRoutes(newEventObject);
   console.log('Weather Added.');
+
+  await enterBatteryInfo(newEventObject);
+  console.log('Battery and AC/Heat Added.');
+
   console.log(newEventObject);
+  await logDay(newEventObject);
 
+  console.log("Save the above day's trips? (y/n)");
+  let saveQuestion = readlineSync.prompt();
 
-  //ask battery questions
-    //iterating through the data adding battery percentages at beginning and ending of segements
-    //ask about heat or acc
+  while (saveQuestion !== 'y' && saveQuestion !== 'n') {
+    console.log("Incorrect entry. Save the above day's trips? (y/n)");
+    saveQuestion = readlineSync.prompt();
+  }
 
-
-  // present the final object in readable manner, confirm that data is correct
-
-
-  // save final object to file (database?)
-
-  console.log('Process Done.')
-
+  if (saveQuestion === 'y') {
+    await saveToJSON(newEventObject);
+    console.log("Day's Trips Saved.");
+  } else {
+    console.log("Day's Trips NOT Saved.");
+  }
+  console.log('Process Done.');
 }
 
 module.exports = enterADay;

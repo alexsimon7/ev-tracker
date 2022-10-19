@@ -1,7 +1,6 @@
 /*
 TODO:
   - Error Handling
-  - Issue with the clicking of the setting button
  */
 
 // Input: Date Object (date of timeline to pull from Google)
@@ -11,6 +10,10 @@ require('dotenv').config();
 const puppeteer = require('puppeteer-extra');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 puppeteer.use(StealthPlugin());
+
+function delay(time) {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}
 
 async function timelineGrabber(date) {
   const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
@@ -34,9 +37,9 @@ async function timelineGrabber(date) {
   await page.waitForSelector('#passwordNext');
   await page.click('#passwordNext');
 
-  // 2fa occurs here; number of clicks/keystrokes will varies by user
-  // await page.waitForNavigation({waitUntil: 'domcontentloaded'});
+  // 2fa occurs here; number of clicks/keystrokes will vary by user
 
+  await delay(12000);
   await page.waitForSelector('div[aria-label="Year"]');
   await page.click('div[aria-label="Year"]');
 
@@ -57,19 +60,15 @@ async function timelineGrabber(date) {
   await page.waitForSelector(`td[aria-label="${day}"]`);
   await page.click(`td[aria-label="${day}"]`);
 
-  // await page.waitForNavigation({waitUntil: 'domcontentloaded'});
-
+  await delay(3000);
   await page.waitForSelector('div[aria-label=" Settings "]');
   await page.click('div[aria-label=" Settings "]');
-  // await page.waitForXPath('//div[@aria-label=" Settings "]');
-  // const settingsButton = await page.$x('//div[@aria-label=" Settings "]');
-  // await settingsButton[0].click();
-
 
   await page.waitForXPath('//div[@class="settings-menu goog-menu overflow-menu"][contains(@style, "visibility: visible")]//child::div[@aria-label=" Export this day to KML "]');
   const downloadKML = await page.$x('//div[@class="settings-menu goog-menu overflow-menu"][contains(@style, "visibility: visible")]//child::div[@aria-label=" Export this day to KML "]');
   await downloadKML[0].click();
 
+  await delay(5000);
   await browser.close();
 }
 

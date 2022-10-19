@@ -1,9 +1,16 @@
-//Input: Date Obj (date to collect routes)
-//Output: Trip Object (which includes driving segments, or if none, an empty Trip Object)
+/*
+Input: Date Obj (date to collect trip routes)
+Trip Object (which includes driving segments, or if none, an empty Trip Object)
+
+TODO:
+  - Error Handling re File Access
+ */
 
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
+const readlineSync = require('readline-sync');
+const createDateString = require('./createDateString');
 
 function convertMetersToMiles(meters) {
     let miles = meters / 1609.344;
@@ -28,24 +35,23 @@ function convertToHours(seconds) {
 
 
 async function createTripObject(date) {
-    let year = date.getFullYear().toString();
-    let month = (date.getMonth() + 1).toString().length === 1 ? '0' + (date.getMonth() + 1).toString() : (date.getMonth() + 1).toString();
-    let day = date.getDate().toString().length ===1 ? '0' + date.getDate().toString() : date.getDate().toString();
-    let fileDate = `${year}-${month}-${day}`;
+    // Create Date for File Extension
+
+    const fileDate = await createDateString(date);
+
+    // Read the File and Parse to JSON
 
     let readFile = fs.readFileSync(`${path.dirname(__dirname)}/ev-tracker/data/${fileDate}.json`, 'utf8');
 
     let obj = JSON.parse(readFile);
 
-// Start Time, End Time, Distance (in meters); name/address of previous point and subsequent point (check end point match begin drive, end drive begin point)
+    // Create New Trip Array, Iterate Through JSON Data Looking For Driving Trips
 
-    let eventObject = [];
+    let tripObject = [];
 
-
-// known bug with unlabeled driving data, known bug with issue with missing beginning address and end address
     obj.features.forEach((element, index) => {
         let routeSegment = {};
-        //pull data from current element
+
         if(element.geometry.type === "LineString"  && element.properties.Category === 'Driving') {
 
             routeSegment.begin = new Date(element.properties.timespan.begin);
@@ -74,12 +80,25 @@ async function createTripObject(date) {
         }
 
         if(Object.hasOwn(routeSegment, 'begin')) {
-            eventObject.push(routeSegment);
+            // Confirm With User That Driving Trip Should Be Tracked, Add Trip Array If So
+            console.log(`Include trip from ${routeSegment.startAddress} to ${routeSegment.endAddress}? (y/n)`);
+            let includeTrip = readlineSync.prompt();
+
+            while(includeTrip !== 'y' && includeTrip !== 'n') {
+                console.log(`Incorrect entry. Include trip from ${routeSegment.startAddress} to ${routeSegment.endAddress}? (y/n)`);
+                includeTrip = readlineSync.prompt();
+            }
+
+            if(includeTrip === 'y') {
+                tripObject.push(routeSegment);
+            } else if (includeTrip === 'n') {
+                console.log(`Trip from ${routeSegment.startAddress} to ${routeSegment.endAddress} not included`);
+            }
         }
 
     })
 
-    return eventObject;
+    return tripObject;
 }
 
 

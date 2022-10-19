@@ -1,20 +1,20 @@
+/*
+Input: Date Obj (date of current kml file to be converted to JSON)
+Output: returns the parsed JSON and creates a JSON file in the date folder
+
+TODO:
+  - Error Handling re KML file
+ */
+
 const tj = require('@tmcw/togeojson');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const { DOMParser } = require('xmldom');
-
-/*
-Input: Date Obj (date of current kml file to be converted to JSON)
-Output: returns the parsed JSON and creates a JSON file in the date
-folder **Do we need to create the JSON file?
- */
+const createDateString = require('./createDateString');
 
 async function kmlToJSON(date) {
-  const year = date.getFullYear().toString();
-  const month = (date.getMonth() + 1).toString().length === 1 ? `0${(date.getMonth() + 1).toString()}` : (date.getMonth() + 1).toString();
-  const day = date.getDate().toString().length === 1 ? `0${date.getDate().toString()}` : date.getDate().toString();
-  const fileDate = `${year}-${month}-${day}`;
+  const fileDate = await createDateString(date);
 
   // Get Filename for Downloaded Document
   const fileDir = fs.readdirSync(`${os.homedir()}/Downloads`, 'utf8');

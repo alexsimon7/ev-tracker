@@ -1,6 +1,7 @@
 const readlineSync = require('readline-sync');
 
-const enterADay = require('./enterADay')
+const enterADay = require('./enterADay');
+const viewDays = require('./viewDays');
 const timelineGrabber = require('./timelineGrabber/timelineGrabber');
 
 function correctMenuChoice(choice) {
@@ -30,7 +31,7 @@ async function run() {
     } else if (menuSelection === '3') {
       // await removeADay();
     } else if (menuSelection === '4') {
-      // await viewDays();
+      await viewDays();
     }
   }
 }

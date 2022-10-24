@@ -66,7 +66,6 @@ async function enterADay() {
   await enterBatteryInfo(newEventObject);
   console.log('Battery and AC/Heat Added.');
 
-  console.log(newEventObject);
   await logDay(newEventObject);
 
   console.log("Save the above day's trips? (y/n)");

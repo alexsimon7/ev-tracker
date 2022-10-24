@@ -1,3 +1,8 @@
+/*
+Input: date object
+Output: formatted string to be used in file systems
+ */
+
 async function createDateString(date) {
   const year = date.getFullYear().toString();
   const month = (date.getMonth() + 1).toString().length === 1 ? `0${(date.getMonth() + 1).toString()}` : (date.getMonth() + 1).toString();

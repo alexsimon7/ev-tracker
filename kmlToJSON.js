@@ -1,9 +1,6 @@
 /*
 Input: Date Obj (date of current kml file to be converted to JSON)
 Output: returns the parsed JSON and creates a JSON file in the date folder
-
-TODO:
-  - Error Handling re KML file
  */
 
 const tj = require('@tmcw/togeojson');

@@ -1,9 +1,6 @@
 /*
 Input: Trip Object
 Output: Trip Object modified with battery related info and climate control info
-
-TODO:
-  - Error Handling?
  */
 const readlineSync = require('readline-sync');
 
@@ -26,19 +23,19 @@ async function enterBatteryInfo(tripObject) {
       }
 
       console.log('Enter the starting battery percentage: ');
-      startBattery = Number.parseInt(readlineSync.prompt());
+      startBattery = Number.parseInt(readlineSync.prompt(), 10);
 
-      while (incorrectBatteryPercentage(Number.parseInt(startBattery))) {
+      while (incorrectBatteryPercentage(Number.parseInt(startBattery, 10))) {
         console.log('Incorrect entry. Enter the starting battery percentage: ');
-        startBattery = Number.parseInt(readlineSync.prompt());
+        startBattery = Number.parseInt(readlineSync.prompt(), 10);
       }
 
       console.log('Enter the ending battery percentage: ');
-      endBattery = Number.parseInt(readlineSync.prompt());
+      endBattery = Number.parseInt(readlineSync.prompt(), 10);
 
-      while (incorrectBatteryPercentage(Number.parseInt(endBattery))) {
+      while (incorrectBatteryPercentage(Number.parseInt(endBattery, 10))) {
         console.log('Incorrect entry. Enter the starting battery percentage: ');
-        endBattery = Number.parseInt(readlineSync.prompt());
+        endBattery = Number.parseInt(readlineSync.prompt(), 10);
       }
     }
 
@@ -50,11 +47,13 @@ async function enterBatteryInfo(tripObject) {
       usedCC = readlineSync.prompt();
     }
 
-    tripObject[index].startBattery = Number.parseInt(startBattery);
-    tripObject[index].endBattery = Number.parseInt(endBattery);
-    tripObject[index].batteryPercentageUsed = Number.parseInt(startBattery) - Number.parseInt(endBattery);
+    tripObject[index].startBattery = Number.parseInt(startBattery, 10);
+    tripObject[index].endBattery = Number.parseInt(endBattery, 10);
+    tripObject[index].batteryPercentageUsed = Number.parseInt(startBattery, 10)
+      - Number.parseInt(endBattery, 10);
     tripObject[index].usedCC = usedCC === 'y';
-    tripObject[index].milePerBatteryPercentage = tripObject[index].distanceInMiles / tripObject[index].batteryPercentageUsed;
+    tripObject[index].milePerBatteryPercentage = tripObject[index].distanceInMiles
+      / tripObject[index].batteryPercentageUsed;
   }
 }
 

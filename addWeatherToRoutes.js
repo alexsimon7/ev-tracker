@@ -1,15 +1,8 @@
 /*
-Input: tripObject
-Output: undefined; add temperate to each route on trip
-
-TODO:
-  - Error Handling re API Access
- */
-
-// Input: newEventObj
-// Output: undefined; adds appropriate weather to each trip
-// let exampleURL = "https://archive-api.open-meteo.com/v1/era5?latitude=52.52&longitude=13.41&start_date=2022-01-01&end_date=2022-01-01&hourly=temperature_2m&temperature_unit=fahrenheit";
-
+Input: newEventObj
+Output: undefined; adds appropriate weather to each trip
+let exampleURL = "https://archive-api.open-meteo.com/v1/era5?latitude=52.52&longitude=13.41&start_date=2022-01-01&end_date=2022-01-01&hourly=temperature_2m&temperature_unit=fahrenheit";
+*/
 const fetch = require('node-fetch');
 const createDateString = require('./createDateString');
 

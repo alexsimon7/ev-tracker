@@ -12,8 +12,6 @@ async function saveToJSON(tripObject) {
   for (let element in tripObject) {
     userData.push(tripObject[element]);
   }
-  // sort trips oldest to newest
-  userData.sort((a, b) => new Date(a.begin) - new Date(b.begin));
 
   const toSave = JSON.stringify(userData);
   fs.writeFileSync(`${__dirname}/data/data.json`, toSave, 'utf-8');

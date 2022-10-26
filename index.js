@@ -2,7 +2,7 @@ const readlineSync = require('readline-sync');
 
 const enterADay = require('./enterADay');
 const viewDays = require('./viewDays');
-const removeADay = require('./removeADay')
+const removeADay = require('./removeADay');
 
 function correctMenuChoice(choice) {
   return ['1', '2', '3', '4'].includes(choice);
@@ -31,6 +31,7 @@ async function run() {
       await removeADay();
     }
   }
+  console.log('Quiting...');
 }
 
 run();

@@ -5,7 +5,9 @@ Trip Object (which includes driving segments, or if none, an empty Trip Object)
 
 const fs = require('fs');
 const path = require('path');
+const colors = require('colors');
 const readlineSync = require('readline-sync');
+const Table = require('cli-table3');
 const createDateString = require('./createDateString');
 
 function convertMetersToMiles(meters) {
@@ -73,18 +75,30 @@ async function createTripObject(date) {
 
     if (Object.hasOwn(routeSegment, 'begin')) {
       // Confirm With User That Driving Trip Should Be Tracked, Add Trip Array If So
-      console.log(`Include trip from ${routeSegment.startAddress} to ${routeSegment.endAddress}? (y/n)`);
+      const table = new Table({
+        head: ['Start', 'Destination'],
+        style: {
+          head: [],
+          border: [],
+        },
+        colWidths: [15, 15],
+        wordWrap: true,
+      });
+
+      table.push([routeSegment.startAddress, routeSegment.endAddress]);
+      console.log(table.toString());
+      console.log('Include trip? (y/n)');
       let includeTrip = readlineSync.prompt();
 
       while (includeTrip !== 'y' && includeTrip !== 'n') {
-        console.log(`Incorrect entry. Include trip from ${routeSegment.startAddress} to ${routeSegment.endAddress}? (y/n)`);
+        console.log(colors.red(`Incorrect entry. Include trip from ${routeSegment.startAddress} to ${routeSegment.endAddress}? (y/n)`));
         includeTrip = readlineSync.prompt();
       }
 
       if (includeTrip === 'y') {
         tripObject.push(routeSegment);
       } else if (includeTrip === 'n') {
-        console.log(`Trip from ${routeSegment.startAddress} to ${routeSegment.endAddress} not included`);
+        console.log(colors.red(`Trip from ${routeSegment.startAddress} to ${routeSegment.endAddress} not included`));
       }
     }
   });

@@ -2,12 +2,15 @@
 Input: none
 Output: undefined; grabs kml file, converts to JSON, creates a newEventObject,
   add data and saves newEventObject, depending on user input
+** return statements used to stop execution for errors downloading kml, converting to JSON, or
+accessing weather API
  */
 
 const readlineSync = require('readline-sync');
 
 const os = require('os');
 const path = require('path');
+const colors = require('colors');
 const timelineGrabber = require('./timelineGrabber/timelineGrabber');
 const kmlToJSON = require('./kmlToJSON');
 const createTripObject = require('./createTripObject');
@@ -28,8 +31,7 @@ async function enterADay() {
   newDate = readlineSync.prompt();
 
   while (!(correctFormatOfDate(newDate))) {
-    console.log('Incorrect Date Format.');
-    console.log('Enter a Date (mm/dd/yyyy): ');
+    console.log(colors.red('Incorrect Date Format. Enter a Date (mm/dd/yyyy): '));
     newDate = readlineSync.prompt();
   }
 
@@ -39,45 +41,66 @@ async function enterADay() {
 
   if (!alreadyHaveJSON) {
     if (!alreadyDownloaded) {
-      await timelineGrabber(newDateObject);
-      console.log('Timeline Grabbed.');
+      try {
+        await timelineGrabber(newDateObject);
+      } catch (e) {
+        console.log(colors.red(`Timeline Grabber Failed: ${e.message.toString()}`));
+        return;
+      }
+      console.log(colors.green('Timeline Grabbed Successfully.'));
 
-      await kmlToJSON(newDateObject);
-      console.log('Converted to JSON');
+      try {
+        await kmlToJSON(newDateObject);
+      } catch (e) {
+        console.log(colors.red(`KML to JSON Conversion Failed: ${e.message.toString()}`));
+        return;
+      }
+      console.log(colors.green('Converted to JSON.'));
     } else {
       console.log('KML already downloaded.');
-      await kmlToJSON(newDateObject);
-      console.log('Converted to JSON');
+      try {
+        await kmlToJSON(newDateObject);
+      } catch (e) {
+        console.log(colors.red(`KML to JSON Conversion Failed: ${e.message.toString()}`));
+        return;
+      }
+      console.log(colors.green('Converted to JSON.'));
     }
   } else {
-    console.log('JSON already in data');
+    console.log('JSON already in data.');
   }
 
   const newEventObject = await createTripObject(newDateObject);
-  console.log('New Object Created');
 
-  await addWeatherToRoutes(newEventObject);
-  console.log('Weather Added.');
-
-  await enterBatteryInfo(newEventObject);
-  console.log('Battery and AC/Heat Added.');
-  await logDay(newEventObject);
-
-  console.log("Save the above day's trips? (y/n)");
-  let saveQuestion = readlineSync.prompt();
-
-  while (saveQuestion !== 'y' && saveQuestion !== 'n') {
-    console.log("Incorrect entry. Save the above day's trips? (y/n)");
-    saveQuestion = readlineSync.prompt();
-  }
-
-  if (saveQuestion === 'y') {
-    await saveToJSON(newEventObject);
-    console.log("Day's Trips Saved.");
+  if (newEventObject.length === 0) {
+    console.log('No Trips Selected.');
   } else {
-    console.log("Day's Trips NOT Saved.");
+    try {
+      await addWeatherToRoutes(newEventObject);
+    } catch (e) {
+      console.log(colors.red(`Failed to Access Weather API: ${e.message.toString()}`));
+      return;
+    }
+    console.log(colors.green('Weather Added.'));
+
+    await enterBatteryInfo(newEventObject);
+    await logDay(newEventObject);
+
+    console.log("Save the above day's trips? (y/n)");
+    let saveQuestion = readlineSync.prompt();
+
+    while (saveQuestion !== 'y' && saveQuestion !== 'n') {
+      console.log(colors.red("Incorrect entry. Save the above day's trips? (y/n)"));
+      saveQuestion = readlineSync.prompt();
+    }
+
+    if (saveQuestion === 'y') {
+      await saveToJSON(newEventObject);
+      console.log(colors.green("Day's Trips Saved."));
+    } else {
+      console.log(colors.red("Day's Trips NOT Saved."));
+    }
   }
-  console.log('Process Done.');
 }
 
 module.exports = enterADay;

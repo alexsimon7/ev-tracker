@@ -4,6 +4,7 @@ Output: Deletes provided trips from given day from JSON
  */
 const readlineSync = require('readline-sync');
 const fs = require('fs');
+const colors = require('colors');
 
 function correctFormatOfDate(date) {
   return Date.parse(date);
@@ -14,18 +15,17 @@ async function removeADay() {
   let deleteDate = readlineSync.prompt();
 
   while (!(correctFormatOfDate(deleteDate))) {
-    console.log('Incorrect Date Format.');
-    console.log('Enter a Date (mm/dd/yyyy): ');
+    console.log(colors.red('Incorrect Date Format. Enter a Date (mm/dd/yyyy): '));
     deleteDate = readlineSync.prompt();
   }
 
   const deleteDateObject = new Date(deleteDate);
 
-  console.log(`Are you sure you want to delete all trips for ${deleteDateObject.toDateString()}? (y/n): `);
+  console.log(colors.red(`Are you sure you want to delete all trips for ${deleteDateObject.toDateString()}? (y/n): `));
   let confirm = readlineSync.prompt();
 
   while (confirm !== 'y' && confirm !== 'n') {
-    console.log(`Invalid entry. Are you sure you want to delete all trips for ${deleteDateObject.toDateString()}? (y/n): `);
+    console.log(colors.red(`Invalid entry. Are you sure you want to delete all trips for ${deleteDateObject.toDateString()}? (y/n): `));
     confirm = readlineSync.prompt();
   }
 
@@ -37,7 +37,7 @@ async function removeADay() {
 
   const toSave = JSON.stringify(userData);
   fs.writeFileSync(`${__dirname}/data/data.json`, toSave, 'utf-8');
-  console.log('Deleted.');
+  console.log(colors.green('Deleted.'));
 }
 
 module.exports = removeADay;

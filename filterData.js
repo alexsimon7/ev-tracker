@@ -4,29 +4,28 @@ const colors = require('colors');
 async function filterData(data) {
   let dataToFilter = data;
   let choiceFilter = '0';
-  const validChoices = ['1', '2', '3', '4', '5', '6'];
+
+  const validChoices = ['1', '2', '3', '4', '5', ''];
   const filtersChosen = [];
 
-  while (choiceFilter !== '6') {
+  while (choiceFilter !== '') {
     console.log('Filter Choices: ');
-    console.log((filtersChosen.includes('1')) ? colors.green('1. Temp >= 85 F') : '1. Temp >= 85 F');
-    console.log((filtersChosen.includes('2')) ? colors.green('2. Temps <= 32 F') : '2. Temps <= 32 F');
+    console.log((filtersChosen.includes('1')) ? colors.green('1. Temp at or Below Freezing (32\u00B0F)') : '1. Temp at or Below Freezing (32\u00B0F)');
+    console.log((filtersChosen.includes('2')) ? colors.green('2. Climate Control Used') : '2. Climate Control Used');
     console.log((filtersChosen.includes('3')) ? colors.green('3. Miles Per Battery % < 2') : '3. Miles Per Battery % < 2');
     console.log((filtersChosen.includes('4')) ? colors.green('4. Miles Per Battery % >= 2') : '4. Miles Per Battery % >= 2');
-    console.log((filtersChosen.includes('5')) ? colors.green('5. Climate Control Used') : '5. Climate Control Used');
-    console.log('6. Display Data');
-
+    console.log((filtersChosen.includes('5')) ? colors.green('5. Last 10 Trips') : '5. Last 10 Trips');
+    console.log('Hit Enter When All Filters Selected');
     choiceFilter = readlineSync.prompt();
 
     while (!(validChoices.includes(choiceFilter))) {
-      console.log('Invalid entry.');
-      console.log('Filter Choices: ');
-      console.log((filtersChosen.includes('1')) ? colors.green('1. Temp >= 85 F') : '1. Temp >= 85 F');
-      console.log((filtersChosen.includes('2')) ? colors.green('2. Temps <= 32 F') : '2. Temps <= 32 F');
+      console.log(colors.red('Invalid entry. Filter Choices: '));
+      console.log((filtersChosen.includes('1')) ? colors.green('1. Temp at or Below Freezing (32\u00B0F)') : '1. Temp at or Below Freezing (32\u00B0F)');
+      console.log((filtersChosen.includes('2')) ? colors.green('2. Climate Control Used') : '2. Climate Control Used');
       console.log((filtersChosen.includes('3')) ? colors.green('3. Miles Per Battery % < 2') : '3. Miles Per Battery % < 2');
       console.log((filtersChosen.includes('4')) ? colors.green('4. Miles Per Battery % >= 2') : '4. Miles Per Battery % >= 2');
-      console.log((filtersChosen.includes('5')) ? colors.green('5. Climate Control Used') : '5. Climate Control Used');
-      console.log('6. DisplayData');
+      console.log((filtersChosen.includes('5')) ? colors.green('5. Last 10 Trips') : '5. Last 10 Trips');
+      console.log('Hit Enter When All Filters Selected');
       choiceFilter = readlineSync.prompt();
     }
 
@@ -40,10 +39,10 @@ async function filterData(data) {
   filtersChosen.forEach((element) => {
     switch (element) {
       case '1':
-        dataToFilter = dataToFilter.filter((element) => element.routeTemp >= 85);
+        dataToFilter = dataToFilter.filter((element) => element.routeTemp <= 32);
         break;
       case '2':
-        dataToFilter = dataToFilter.filter((element) => element.routeTemp <= 32);
+        dataToFilter = dataToFilter.filter((element) => element.usedCC === true);
         break;
       case '3':
         dataToFilter = dataToFilter.filter((element) => element.milePerBatteryPercentage < 2);
@@ -52,7 +51,7 @@ async function filterData(data) {
         dataToFilter = dataToFilter.filter((element) => element.milePerBatteryPercentage >= 2);
         break;
       case '5':
-        dataToFilter = dataToFilter.filter((element) => element.usedCC === true);
+        dataToFilter = dataToFilter.slice(0, 10);
         break;
       case '6':
         dataToFilter = dataToFilter.sort((a, b) => new Date(a.begin) - new Date(b.begin));

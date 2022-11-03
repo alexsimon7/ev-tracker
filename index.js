@@ -1,8 +1,8 @@
 const readlineSync = require('readline-sync');
 
-const enterADay = require('./enterADay');
-const viewDays = require('./viewDays');
-const removeADay = require('./removeADay');
+const enterADay = require('./lib/enterADay/enterADay');
+const viewDays = require('./lib/viewDays/viewDays');
+const removeADay = require('./lib/removeADay/removeADay');
 
 function correctMenuChoice(choice) {
   return ['1', '2', '3', '4'].includes(choice);

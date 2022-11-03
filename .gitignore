@@ -1,7 +1,6 @@
 .env
 /node_modules/
-/notes/
 /data/
 /.eslintrc.js
 .idea
-/.env
+
